@@ -1,0 +1,64 @@
+﻿@page "/"
+@inject IJSRuntime js
+@inject SweetAlertService sweetAlertService
+
+<PageTitle>Index</PageTitle>
+
+<h1>Ejemplo 1: usos básicos de Sweet alert2</h1>
+<hr />
+<button class="btn btn-primary" @onclick="@MostrarAlertaSweetAlert2Basico">Alerta básica</button>
+<button class="btn btn-success" @onclick="@MostrarAlertaSweetAlert2Success">Alerta Success</button>
+<button class="btn btn-danger" @onclick="@MostrarAlertaSweetAlert2Error">Alerta Error</button>
+<hr />
+
+<h1>Formulario de insertar nombre</h1>
+
+<input type="text" @bind="_nombre" />
+<button @onclick=InsertarNombre class="btn btn-primary">Insertar</button>
+
+<ul>
+    @foreach (var nombre in Nombres)
+    {
+        <li>@nombre</li>
+    }
+</ul>
+
+@code {
+    public string _nombre = "";
+    public List<string> Nombres { get; set; } = new List<string>();
+
+    public async Task MostrarAlertaSweetAlert2Basico()
+    {
+        await sweetAlertService.FireAsync("Ejemplo de SweetAlert2 básica");
+    }
+    
+    public async Task MostrarAlertaSweetAlert2Success()
+    {
+        await sweetAlertService.FireAsync("Excelente", "Acción realizada con éxito", "success");
+    }
+    
+    public async Task MostrarAlertaSweetAlert2Error()
+    {
+        await sweetAlertService.FireAsync("Error", "Acción con error", "error");
+    }
+
+    public async Task InsertarNombre()
+    {
+        var resultado = await sweetAlertService.FireAsync(new SweetAlertOptions
+        {
+            Title = "Confirmación",
+            Text = "¿Deseas añadir el nombre [" + _nombre + "] a la lista?",
+            Icon = SweetAlertIcon.Warning,
+            ShowCancelButton = true,
+            ConfirmButtonText = "Sí, me gusta ese nombre",
+            CancelButtonText = "No, espera"
+        });
+
+        var confirmado = !string.IsNullOrEmpty(resultado.Value);
+        if (confirmado)
+        {
+            Nombres.Add(_nombre);
+            _nombre = "";
+        }                
+    }
+}

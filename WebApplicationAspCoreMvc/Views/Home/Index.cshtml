@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h1>Ejemplo 1: usos básicos de Sweet alert2</h1>
+<hr />
+<button class="btn btn-primary" onclick="mostrarAlertaSweetAlert2Basico()">Alerta básica</button>
+<button class="btn btn-success" onclick="mostrarAlertaSweetAlert2Success()">Alerta Success</button>
+<button class="btn btn-danger" onclick="mostrarAlertaSweetAlert2Error()">Alerta Error</button>
+<hr />
+
+<h1>Ejemplo 2: interceptando un formulario, alerta está seguro</h1>
+<form method="post" id="formulario" onsubmit="enviarFormulario(event)">
+    <div class="mb-3">
+        <label for="Nombre" class="form-label">Nombre</label>
+        <input type="text" required name="Nombre" class="form-control" autocomplete="off"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar formulario</button>
+</form>
+
+@section Scripts{
+    <script>
+        function mostrarAlertaSweetAlert2Basico(){
+            Swal.fire('Ejemplo de SweetAlert2 básica');
+        }
+
+        function mostrarAlertaSweetAlert2Success(){
+            Swal.fire('Excelente', 'Acción realizada con éxito', 'success');
+        }
+
+        function mostrarAlertaSweetAlert2Error(){
+            Swal.fire('Error', 'Acción con error', 'error');
+        }
+
+        function enviarFormulario(e){
+            //Corto el envío del fomulario para "posteralo" de manera manual
+            e.preventDefault();
+
+            Swal.fire({
+                title: '¿Quieres guardar los cambios?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí'
+            }).then((resultado) => {
+                if (resultado.isConfirmed) {
+                    const formulario = document.getElementById('formulario');
+                    formulario.submit();
+                }
+            });
+        }
+        
+    </script>
+}
